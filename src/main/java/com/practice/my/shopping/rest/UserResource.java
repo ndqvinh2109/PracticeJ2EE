@@ -7,9 +7,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
-import com.practice.my.shopping.entity.User;
-import com.practice.my.shopping.service.UserService;
-
 @Path("users")
 public class UserResource {
 	
