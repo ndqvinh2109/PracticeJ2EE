@@ -1,6 +1,7 @@
 package com.practice.my.shopping.util;
 
 import com.practice.my.shopping.model.Person;
+import com.practice.my.shopping.model.PersonSearchParameters;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -13,8 +14,8 @@ public class CommonUtil {
     public static enum Order {ASCENDING, DESCENDING};
 
     /** Return a Comparator of T on a function f(T) -> R */
-    public static <T, R extends Comparable<? super R>> Comparator<T> comparatorOf(
-            Function<? super T, ? extends R> function,
+    public static <T, R extends Comparable> Comparator<T> comparatorOf(
+            Function<T, R> function,
             Order order,
             Nulls nulls) {
 
@@ -31,12 +32,12 @@ public class CommonUtil {
                 Comparator.comparing(
                         function, rComparator);
 
-        tComparator = (nulls == Nulls.FIRST)?
-                Comparator.nullsFirst(tComparator) :
-                Comparator.nullsLast(tComparator);
-
         return tComparator;
     }
 
+    public static <T, R extends Comparable> Function<T, R> getPersonSearchValue
+            (PersonSearchParameters parameters, PersonComparator<T, R> personComparator) {
+        return personComparator.getValue(parameters);
+    }
 
 }

@@ -57,7 +57,7 @@ public class SampleUsageGenericComparator {
 
         /*Person 3*/
         Person p3 = new Person();
-        p3.setFirstName("Danh");
+        p3.setFirstName("Diem");
         p3.setLastName("Nguyen");
 
         City c3 = new City();
@@ -145,32 +145,21 @@ public class SampleUsageGenericComparator {
         persons.add(p5);
         persons.add(p6);
 
-        Comparator<Person> c = CommonUtil.comparatorOf(getFirstName(), CommonUtil.Order.ASCENDING, CommonUtil.Nulls.LAST)
-        .thenComparing(CommonUtil.comparatorOf(getLastName(), CommonUtil.Order.ASCENDING, CommonUtil.Nulls.LAST));
+        Comparator<Person> c = CommonUtil.comparatorOf(CommonUtil.getPersonSearchValue(
+                PersonSearchParameters.NAME,
+                SampleUsageGenericComparator::getPersonComparator),
+                CommonUtil.Order.ASCENDING,
+                CommonUtil.Nulls.LAST);
 
-        Comparator<Person> comparator1 = Comparator.comparing(getFirstName(), Comparator.reverseOrder()).thenComparing(getLastName());
-
-        Collections.sort(persons, comparator1);
+        Collections.sort(persons, c);
         displayPersons(persons);
 
-    }
-
-    private static Function<Person, Comparable> getFirstName() {
-       return (person) -> person.getFirstName();
-    }
-
-    private static Function<Person, Comparable> getLastName() {
-        return (person) -> person.getLastName();
-    }
-
-    private static Function<Person, Comparable> getCity() {
-        return (person) -> person.getAddresses().get(0).getCity().getCityName27();
     }
 
     private static Function<Person, Comparable> getPersonComparator(PersonSearchParameters parameters) {
         switch (parameters) {
             case NAME:
-                return person -> person.getFirstName();
+                return Person::getFirstName;
             case ADDRESS:
                 return  person -> person.getAddresses().get(0).getAddressLines();
             case CITY:
@@ -179,8 +168,6 @@ public class SampleUsageGenericComparator {
                 return person -> person.getFirstName();
         }
     }
-
-
 
     public static void displayPersons(List<Person> persons) {
         for(Person p: persons) {
